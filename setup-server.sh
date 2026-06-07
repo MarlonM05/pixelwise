@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 sudo apt update
-sudo apt install -y git python3 python3-pip python3-venv curl postgresql
+sudo apt install -y git python3 python3-pip python3-venv curl postgresql nginx
 
 
 # Activate venv and install pinned dependencies
@@ -54,4 +54,29 @@ fi
 # Initialise the predictions table on every VM via Alchemy
 if [ -f "$SCRIPT_DIR/init_db.py" ] && [ -d "$SCRIPT_DIR/.venv" ]; then
 	(cd "$SCRIPT_DIR" && source .venv/bin/activate && python init_db.py)
+fi
+
+# Install Nginx site and deploy the frontend on prod
+if [ -f deploy/pixelwise.nginx ] && \
+   command -v nginx >/dev/null 2>&1 && \
+   id produser >/dev/null 2>&1; then
+
+    # Deploy the frontend files.
+    sudo mkdir -p /opt/pixelwise/frontend
+    sudo cp -r frontend/* /opt/pixelwise/frontend/
+
+    # Substitute the API key into app.js.
+    KEY=$(grep ^SECRET_API_KEY /opt/pixelwise/.env \
+        | cut -d= -f2)
+    sudo sed -i \
+        "s/REPLACE_ME/$KEY/" \
+        /opt/pixelwise/frontend/app.js
+
+    # Install the site config.
+    sudo cp deploy/pixelwise.nginx \
+        /etc/nginx/sites-available/pixelwise
+    sudo ln -sf /etc/nginx/sites-available/pixelwise \
+        /etc/nginx/sites-enabled/pixelwise
+    sudo rm -f /etc/nginx/sites-enabled/default
+    sudo nginx -t && sudo systemctl reload nginx
 fi
