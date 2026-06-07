@@ -62,15 +62,15 @@ if [ -f deploy/pixelwise.nginx ] && \
    id produser >/dev/null 2>&1; then
 
     # Deploy the frontend files.
-    sudo mkdir -p /opt/pixelwise/frontend
-    sudo cp -r frontend/* /opt/pixelwise/frontend/
+    sudo mkdir -p /var/www/pixelwise
+    sudo cp -r frontend/* /var/www/pixelwise/
 
     # Substitute the API key into app.js.
     KEY=$(grep ^SECRET_API_KEY /opt/pixelwise/.env \
         | cut -d= -f2)
     sudo sed -i \
         "s/REPLACE_ME/$KEY/" \
-        /opt/pixelwise/frontend/app.js
+        /var/www/pixelwise/app.js
 
     # Install the site config.
     sudo cp deploy/pixelwise.nginx \

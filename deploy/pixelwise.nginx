@@ -5,7 +5,7 @@ server {
 
     # Serve the static frontend
     location / {
-        root /opt/pixelwise/frontend;
+        root /var/www/pixelwise;
         index index.html;
         try_files $uri $uri/ =404;
     }
