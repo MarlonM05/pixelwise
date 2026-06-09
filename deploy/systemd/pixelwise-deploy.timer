@@ -2,8 +2,8 @@
 Description=Run PixelWise auto-deploy
 
 [Timer]
-OnBootSec=1min
-OnUnitActiveSec=3min
+OnBootSec=15s
+OnUnitActiveSec=30s
 Unit=pixelwise-deploy.service
 
 [Install]
