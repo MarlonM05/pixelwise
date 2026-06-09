@@ -81,6 +81,15 @@ if [ -f deploy/pixelwise.nginx ] && \
     sudo nginx -t && sudo systemctl reload nginx
 fi
 
+# Grant produser passwordless sudo for the one restart auto-deploy needs
+if command -v systemctl >/dev/null 2>&1 && id produser >/dev/null 2>&1; then
+    sudo tee /etc/sudoers.d/pixelwise >/dev/null <<'EOF'
+produser ALL=(root) NOPASSWD: /usr/bin/systemctl restart pixelwise
+EOF
+    sudo chmod 0440 /etc/sudoers.d/pixelwise
+    sudo visudo -cf /etc/sudoers.d/pixelwise
+fi
+
 # Install the auto-deploy systemd timer on prod
 if [ -f "$SCRIPT_DIR/deploy/systemd/pixelwise-deploy.timer" ] \
    && command -v systemctl >/dev/null 2>&1 \
