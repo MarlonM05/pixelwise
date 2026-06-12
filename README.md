@@ -6,3 +6,6 @@ a virtual machine.
 
 First thing they learn is how to change things here in this repo. 
 Such as this sentence itself.
+
+
+Let's get this autodeployed for Kudos.
