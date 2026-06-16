@@ -5,6 +5,9 @@ import numpy as np
 MODEL_PATH = os.getenv("MODEL_PATH", "models/digit_classifier_v1.pkl")
 _model = None
 
+# Die harten Klassen-Konstanten laut Skript (MNIST 1-9)
+CLASSES = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+
 def get_model():
     global _model
     if _model is None:
@@ -30,13 +33,17 @@ def classify_batch(images: np.ndarray) -> list:
     for i in range(batch_size):
         pred_label = int(predictions[i])
         
-        # Finde den korrekten Array-Index (0-8) für die vorhergesagte Klasse heraus
+        # Finde den Index im Array heraus (0 bis 8)
         pred_index = np.where(model.classes_ == predictions[i])[0][0]
         conf = float(probabilities[i][pred_index])
         
+        # Erzeuge das vom Schema erwartete Scores-Wörterbuch
+        scores_dict = dict(zip(CLASSES, probabilities[i].tolist()))
+        
         results.append({
             "prediction": str(pred_label),
-            "confidence": conf
+            "confidence": conf,
+            "scores": scores_dict
         })
         
     return results
