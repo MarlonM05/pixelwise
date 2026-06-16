@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.schemas import ClassifyRequest, ClassifyResponse
 from app.classifier import classify_batch
 from app.database import get_db, PredictionModel
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
@@ -44,3 +45,5 @@ def classify(req: ClassifyRequest, db: Session = Depends(get_db)):
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
+
+app.mount("/", StaticFiles(directory="static", html=True), name="static")

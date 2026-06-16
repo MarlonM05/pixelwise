@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>PixelWise - Ziffernerkennung</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; background: #f0f2f5; }
+        #canvas-container { margin: 20px; position: relative; }
+        canvas { border: 2px solid #333; background: #000; cursor: crosshair; }
+        .controls { margin-bottom: 20px; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 5px; }
+        button:hover { background: #0056b3; }
+        #result { font-size: 24px; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h1>PixelWise Ziffernerkennung</h1>
+    <div id="canvas-container">
+        <canvas id="paintCanvas" width="280" height="280"></canvas>
+    </div>
+    <div class="controls">
+        <button onclick="clearCanvas()">Löschen</button>
+        <button onclick="sendImage()">Erkennen</button>
+    </div>
+    <div id="result">Zeichne eine Ziffer (1-9)...</div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
